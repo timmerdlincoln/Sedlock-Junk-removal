@@ -357,25 +357,25 @@ function Pricing() {
         <div className="glass-card p-8 md:p-10 rounded-3xl border border-white/10 relative overflow-hidden">
           <div className="absolute inset-0 bg-gradient-to-b from-white/5 to-transparent pointer-events-none" />
 
-          <p className="text-xl md:text-2xl font-serif italic text-white/90 leading-relaxed mb-8">
-            Every job is unique, but most cleanouts land between <span className="text-white font-bold not-italic text-2xl md:text-3xl">$175</span> and <span className="text-white font-bold not-italic text-2xl md:text-3xl">$475</span>. Your custom quote is based simply on the space your items take up.
+          <p className="text-xl md:text-2xl text-white/90 leading-relaxed mb-8">
+            Every job is unique, but most cleanouts land between <span className="text-white font-bold text-2xl md:text-3xl">$175</span> and <span className="text-white font-bold text-2xl md:text-3xl">$475</span>. Your custom quote is based simply on the space your items take up.
           </p>
 
           <div className="text-left max-w-xl mx-auto bg-white/5 p-6 md:p-8 rounded-2xl border border-white/5">
-            <h3 className="text-lg md:text-xl font-medium text-white/90 mb-5 italic font-serif text-center">What goes into your final quote?</h3>
+            <h3 className="text-lg md:text-xl font-medium text-white/90 mb-5 text-center">What goes into your final quote?</h3>
 
-            <ul className="space-y-4 text-base md:text-lg text-white/80 italic font-serif">
+            <ul className="space-y-4 text-base md:text-lg text-white/80">
               <li className="flex items-start gap-4">
-                <span className="font-bold not-italic text-blue-400 mt-0.5">1.</span>
-                <span><span className="font-semibold not-italic text-white">Volume</span> — How much room your items take up in our truck.</span>
+                <span className="font-bold text-blue-400 mt-0.5">1.</span>
+                <span><span className="font-semibold text-white">Volume</span> — How much room your items take up in our truck.</span>
               </li>
               <li className="flex items-start gap-4">
-                <span className="font-bold not-italic text-blue-400 mt-0.5">2.</span>
-                <span><span className="font-semibold not-italic text-white">Weight</span> — Dense materials like concrete or dirt cost a bit more to haul.</span>
+                <span className="font-bold text-blue-400 mt-0.5">2.</span>
+                <span><span className="font-semibold text-white">Weight</span> — Dense materials like concrete or dirt cost a bit more to haul.</span>
               </li>
               <li className="flex items-start gap-4">
-                <span className="font-bold not-italic text-blue-400 mt-0.5">3.</span>
-                <span><span className="font-semibold not-italic text-white">Accessibility</span> — Flights of stairs, tight corners, or long walks to the curb.</span>
+                <span className="font-bold text-blue-400 mt-0.5">3.</span>
+                <span><span className="font-semibold text-white">Accessibility</span> — Flights of stairs, tight corners, or long walks to the curb.</span>
               </li>
             </ul>
           </div>
@@ -440,11 +440,11 @@ function AboutUs() {
           className="mt-32 max-w-4xl mx-auto text-center"
         >
           <h3 className="text-3xl md:text-5xl font-bold text-white mb-8">Why Choose Us?</h3>
-          <p className="text-lg md:text-2xl text-white/80 italic font-serif leading-relaxed mb-6">
+          <p className="text-lg md:text-2xl text-white/80 leading-relaxed mb-6">
             Sedlock Junk Removal is a locally owned, student-run junk removal service based in Indianola, Iowa.
             We provide fast, affordable cleanouts with straightforward pricing and no hidden fees.
           </p>
-          <p className="text-lg md:text-2xl text-white/80 italic font-serif leading-relaxed">
+          <p className="text-lg md:text-2xl text-white/80 leading-relaxed">
             Real people. No corporate upsells. Just reliable service when you need it.
           </p>
         </motion.div>
