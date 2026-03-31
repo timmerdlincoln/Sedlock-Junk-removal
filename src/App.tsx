@@ -1,6 +1,6 @@
 import { motion, useScroll, useTransform } from 'motion/react';
-import { ArrowRight, CheckCircle2, Clock, Truck, Shield, Star, Quote, ChevronRight, Sparkles, Trash2, Recycle, Leaf } from 'lucide-react';
-import React, { useRef, useState, useMemo } from 'react';
+import { ArrowRight, CheckCircle2, Clock, Truck, Shield, Star, Quote, ChevronRight, Sparkles, Trash2, Recycle, Leaf, Package, Monitor, Sofa, Coffee, Archive, FileText, Headphones, Box, Smartphone, Tv, Speaker } from 'lucide-react';
+import React, { useRef, useState, useMemo, useEffect } from 'react';
 
 function Navbar() {
   return (
@@ -75,6 +75,24 @@ function AnimatedLinesBackground() {
   );
 }
 
+const ICONS = [Package, Monitor, Sofa, Coffee, Archive, FileText, Headphones, Box, Smartphone, Tv, Speaker, Trash2, Leaf, Recycle];
+const ITEM_COUNT = 28;
+const FALL_STAGGER = 0.18; // seconds between each item starting to fall
+const FALL_DURATION = 1.2;
+const PILE_HOLD = 4.5; // seconds pile stays visible before clearing
+
+function generateItems() {
+  return Array.from({ length: ITEM_COUNT }).map((_, i) => ({
+    id: i,
+    Icon: ICONS[i % ICONS.length],
+    size: Math.random() * 16 + 16,
+    x: Math.random() * 22 + 39, // 39–61vw (inside trailer width)
+    landY: Math.random() * 9 + 58, // 58–67vh (trailer bed)
+    rotation: Math.random() * 300 - 150,
+    fallDelay: i * FALL_STAGGER,
+  }));
+}
+
 function Hero() {
   const containerRef = useRef<HTMLDivElement>(null);
   const { scrollYProgress } = useScroll({
@@ -84,6 +102,18 @@ function Hero() {
   const y = useTransform(scrollYProgress, [0, 1], ["0%", "50%"]);
   const opacity = useTransform(scrollYProgress, [0, 1], [1, 0]);
 
+  const [items, setItems] = useState(() => generateItems());
+  const [pileVisible, setPileVisible] = useState(true);
+
+  useEffect(() => {
+    const cycleDuration = ITEM_COUNT * FALL_STAGGER + FALL_DURATION + PILE_HOLD;
+    const hideTimer = setTimeout(() => setPileVisible(false), (cycleDuration - 0.6) * 1000);
+    const resetTimer = setTimeout(() => {
+      setItems(generateItems());
+      setPileVisible(true);
+    }, cycleDuration * 1000);
+    return () => { clearTimeout(hideTimer); clearTimeout(resetTimer); };
+  }, [items]);
 
   return (
     <section ref={containerRef} className="relative z-10 min-h-screen flex items-center justify-center overflow-hidden pt-20 bg-white text-black">
@@ -91,6 +121,32 @@ function Hero() {
       <div className="absolute inset-0 bg-[linear-gradient(to_right,#80808012_1px,transparent_1px),linear-gradient(to_bottom,#80808012_1px,transparent_1px)] bg-[size:24px_24px] mask-radial-faded" />
       <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[600px] h-[600px] bg-blue-400/10 rounded-full blur-[120px] mix-blend-multiply animate-blob" />
 
+      {/* Falling Junk — behind trailer */}
+      <div className="absolute inset-0 pointer-events-none overflow-hidden" style={{ zIndex: 1 }}>
+        {items.map((item) => {
+          const Icon = item.Icon;
+          const travelY = item.landY - (-12); // from -12vh to landY
+          return (
+            <motion.div
+              key={item.id}
+              className="absolute text-slate-600"
+              style={{ left: `${item.x}vw`, top: '-12vh' }}
+              initial={{ y: 0, opacity: 0, rotate: 0 }}
+              animate={pileVisible
+                ? { y: `${travelY}vh`, opacity: 1, rotate: item.rotation }
+                : { opacity: 0 }
+              }
+              transition={pileVisible ? {
+                y: { duration: FALL_DURATION, delay: item.fallDelay, ease: [0.4, 0, 1, 1] },
+                opacity: { duration: 0.12, delay: item.fallDelay },
+                rotate: { duration: FALL_DURATION, delay: item.fallDelay, ease: 'easeOut' },
+              } : { duration: 0.5, ease: 'easeOut' }}
+            >
+              <Icon size={item.size} strokeWidth={1.5} />
+            </motion.div>
+          );
+        })}
+      </div>
 
       {/* Trailer Back */}
       <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/4 w-full max-w-[800px] aspect-[2/1] pointer-events-none opacity-80" style={{ zIndex: 2 }}>
@@ -102,7 +158,7 @@ function Hero() {
       </div>
 
       {/* Trailer Front */}
-      <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/4 w-full max-w-[800px] aspect-[2/1] pointer-events-none z-0 opacity-90">
+      <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/4 w-full max-w-[800px] aspect-[2/1] pointer-events-none opacity-90" style={{ zIndex: 3 }}>
         <svg viewBox="0 0 800 400" fill="none" xmlns="http://www.w3.org/2000/svg" className="w-full h-full">
           <path d="M100 120 L700 120 L620 320 L180 320 Z" fill="#0a0f1c" stroke="rgba(255,255,255,0.1)" strokeWidth="2" />
           <path d="M100 120 L700 120" stroke="#3b82f6" strokeWidth="4" opacity="0.3" />
