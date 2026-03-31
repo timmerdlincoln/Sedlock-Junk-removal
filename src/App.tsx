@@ -84,21 +84,15 @@ function Hero() {
   const y = useTransform(scrollYProgress, [0, 1], ["0%", "50%"]);
   const opacity = useTransform(scrollYProgress, [0, 1], [1, 0]);
 
-  const ITEM_COUNT = 22;
-  const FALL_DURATION = 1.4;
-  const STAGGER = 0.32;
-  const REPEAT_DELAY = ITEM_COUNT * STAGGER - FALL_DURATION;
-  const START_Y = -15;
-
-  const junkIcons = [Package, Monitor, Sofa, Coffee, Archive, FileText, Headphones, Box, Smartphone, Tv, Speaker, Trash2, Leaf];
-  const fallingJunk = useMemo(() => Array.from({ length: ITEM_COUNT }).map((_, i) => ({
+  const junkIcons = [Package, Monitor, Sofa, Coffee, Archive, FileText, Headphones, Box, Smartphone, Tv, Speaker, Trash2, Leaf, Recycle];
+  const fallingJunk = useMemo(() => Array.from({ length: 18 }).map((_, i) => ({
     id: i,
     Icon: junkIcons[i % junkIcons.length],
-    size: Math.random() * 18 + 14,
-    x: Math.random() * 24 + 38,
-    landY: Math.random() * 10 + 57,
-    delay: i * STAGGER,
-    rotation: Math.random() * 340 - 170,
+    size: Math.random() * 20 + 18,
+    x: Math.random() * 28 + 36,
+    duration: Math.random() * 1.2 + 1.6,
+    delay: i * 0.45,
+    rotation: Math.random() * 300 - 150,
   })), []);
 
   return (
@@ -111,24 +105,23 @@ function Hero() {
       <div className="absolute inset-0 overflow-hidden pointer-events-none" style={{ zIndex: 1 }}>
         {fallingJunk.map((item) => {
           const Icon = item.Icon;
-          const yTravel = item.landY - START_Y;
           return (
             <motion.div
               key={item.id}
-              className="absolute text-slate-400/50"
-              style={{ left: `${item.x}vw`, top: `${START_Y}vh` }}
+              className="absolute text-slate-700"
+              style={{ left: `${item.x}vw`, top: '-10vh' }}
               animate={{
-                y: [`0vh`, `${yTravel}vh`],
-                opacity: [0, 0.6, 0.6, 0],
+                y: ['0vh', '110vh'],
+                opacity: [0, 1, 1, 0],
                 rotate: [0, item.rotation],
               }}
               transition={{
-                duration: FALL_DURATION,
+                duration: item.duration,
                 delay: item.delay,
                 repeat: Infinity,
-                repeatDelay: REPEAT_DELAY,
+                repeatDelay: 0.5,
                 ease: 'easeIn',
-                opacity: { times: [0, 0.1, 0.85, 1] },
+                opacity: { times: [0, 0.05, 0.85, 1], ease: 'linear' },
               }}
             >
               <Icon size={item.size} strokeWidth={1.5} />
