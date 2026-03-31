@@ -98,7 +98,7 @@ function Hero() {
     return {
       id: `junk-${i}`,
       Icon: junkIcons[i % junkIcons.length],
-      size: Math.random() * 20 + 14,
+      size: Math.random() * 28 + 22,
       startX: Math.random() * 22 + 39, // 39vw to 61vw (inside trailer walls)
       endX: Math.random() * 22 + 39,
       startY: -15,
