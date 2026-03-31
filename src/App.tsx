@@ -1,5 +1,5 @@
 import { motion, useScroll, useTransform } from 'motion/react';
-import { ArrowRight, CheckCircle2, Clock, Truck, Shield, Star, Quote, ChevronRight, Sparkles, Trash2, Recycle, Leaf, Package, Monitor, Sofa, Coffee, Archive, FileText, Headphones, Box, Smartphone, Tv, Speaker } from 'lucide-react';
+import { ArrowRight, CheckCircle2, Clock, Truck, Shield, Star, Quote, ChevronRight, Sparkles, Trash2, Recycle, Leaf } from 'lucide-react';
 import React, { useRef, useState, useMemo } from 'react';
 
 function Navbar() {
@@ -75,17 +75,6 @@ function AnimatedLinesBackground() {
   );
 }
 
-const ICONS = [Package, Monitor, Sofa, Coffee, Archive, FileText, Headphones, Box, Smartphone, Tv, Speaker, Trash2, Leaf, Recycle];
-
-const fallingItems = Array.from({ length: 20 }).map((_, i) => ({
-  id: i,
-  Icon: ICONS[i % ICONS.length],
-  size: Math.random() * 14 + 18,
-  x: Math.random() * 24 + 38,       // 38–62vw — inside trailer
-  duration: Math.random() * 1.5 + 2, // 2–3.5s fall
-  delay: -(Math.random() * 6),        // random phase offset so they're spread out on load
-  rotation: Math.random() * 300 - 150,
-}));
 
 function Hero() {
   const containerRef = useRef<HTMLDivElement>(null);
@@ -102,36 +91,6 @@ function Hero() {
       <div className="absolute inset-0 bg-[linear-gradient(to_right,#80808012_1px,transparent_1px),linear-gradient(to_bottom,#80808012_1px,transparent_1px)] bg-[size:24px_24px] mask-radial-faded" />
       <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[600px] h-[600px] bg-blue-400/10 rounded-full blur-[120px] mix-blend-multiply animate-blob" />
 
-      {/* Falling Junk — continuous, disappears inside trailer */}
-      <div className="absolute inset-0 pointer-events-none overflow-hidden" style={{ zIndex: 1 }}>
-        {fallingItems.map((item) => {
-          const Icon = item.Icon;
-          // Fade out as icon approaches the trailer (~55vh mark)
-          // Full fall is -10vh → 110vh, trailer is ~55–70vh
-          return (
-            <motion.div
-              key={item.id}
-              className="absolute text-slate-600"
-              style={{ left: `${item.x}vw`, top: '-10vh' }}
-              animate={{
-                y: ['0vh', '120vh'],
-                opacity: [0, 1, 1, 0],
-                rotate: [0, item.rotation],
-              }}
-              transition={{
-                duration: item.duration,
-                delay: item.delay,
-                repeat: Infinity,
-                ease: 'easeIn',
-                opacity: { times: [0, 0.05, 0.5, 0.62], ease: 'linear' },
-                rotate: { ease: 'easeOut' },
-              }}
-            >
-              <Icon size={item.size} strokeWidth={1.5} />
-            </motion.div>
-          );
-        })}
-      </div>
 
       {/* Trailer Back */}
       <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/4 w-full max-w-[800px] aspect-[2/1] pointer-events-none opacity-80" style={{ zIndex: 2 }}>
