@@ -1,6 +1,6 @@
 import { motion, useScroll, useTransform } from 'motion/react';
 import { ArrowRight, CheckCircle2, Clock, Truck, Shield, Star, Quote, ChevronRight, Sparkles, Trash2, Recycle, Leaf, Package, Monitor, Sofa, Coffee, Archive, FileText, Headphones, Box, Smartphone, Tv, Speaker } from 'lucide-react';
-import React, { useRef, useState, useMemo } from 'react';
+import React, { useRef, useState, useMemo, useEffect } from 'react';
 
 function Navbar() {
   return (
@@ -84,31 +84,31 @@ function Hero() {
   const y = useTransform(scrollYProgress, [0, 1], ["0%", "50%"]);
   const opacity = useTransform(scrollYProgress, [0, 1], [1, 0]);
 
-  const junkIcons = [Package, Monitor, Sofa, Coffee, Archive, FileText, Headphones, Box, Smartphone, Tv, Speaker, Trash2, Leaf];
-  const fallingJunk = useMemo(() => Array.from({ length: 80 }).map((_, i) => {
-    const fallDuration = Math.random() * 2 + 1.5; // 1.5s to 3.5s
-    const waitDuration = 3; // wait 3 seconds
-    const leaveDuration = Math.random() * 4 + 4; // 4s to 8s to slowly leave
-    const totalDuration = fallDuration + waitDuration + leaveDuration;
+  const [cycleKey, setCycleKey] = useState(0);
+  const [clearing, setClearing] = useState(false);
 
-    const t1 = fallDuration / totalDuration;
-    const t2 = (fallDuration + waitDuration) / totalDuration;
-
-    return {
-      id: `junk-${i}`,
-      Icon: junkIcons[i % junkIcons.length],
-      size: Math.random() * 24 + 16,
-      startX: Math.random() * 26 + 37, // 37vw to 63vw (tighter inside trailer)
-      endX: Math.random() * 26 + 37,
-      startY: -20, // -20vh
-      endY: Math.random() * 12 + 56, // 56vh to 68vh (trailer bed)
-      leaveY: 120, // fall off screen
-      duration: totalDuration,
-      times: [0, t1, t2, 1],
-      delay: Math.random() * -totalDuration,
-      rotation: Math.random() * 360,
+  useEffect(() => {
+    setClearing(false);
+    const clearTimer = setTimeout(() => setClearing(true), 5000);
+    const resetTimer = setTimeout(() => setCycleKey((k: number) => k + 1), 5800);
+    return () => {
+      clearTimeout(clearTimer);
+      clearTimeout(resetTimer);
     };
-  }), []);
+  }, [cycleKey]);
+
+  const junkIcons = [Package, Monitor, Sofa, Coffee, Archive, FileText, Headphones, Box, Smartphone, Tv, Speaker, Trash2, Leaf];
+  const START_Y = -15;
+  const fallingJunk = useMemo(() => Array.from({ length: 35 }).map((_, i) => ({
+    id: i,
+    Icon: junkIcons[i % junkIcons.length],
+    size: Math.random() * 18 + 14,
+    landX: Math.random() * 24 + 38,
+    landY: Math.random() * 10 + 57,
+    delay: (i / 35) * 3.5,
+    rotation: Math.random() * 340 - 170,
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  })), [cycleKey]);
 
   return (
     <section ref={containerRef} className="relative z-10 min-h-screen flex items-center justify-center overflow-hidden pt-20 bg-white text-black">
@@ -125,37 +125,34 @@ function Hero() {
         </svg>
       </div>
 
-      {/* Falling Junk */}
-      <div className="absolute inset-0 overflow-hidden pointer-events-none z-0">
+      {/* Falling Junk — pile up then clear */}
+      <motion.div
+        key={cycleKey}
+        animate={{ opacity: clearing ? 0 : 1 }}
+        transition={{ duration: 0.7, ease: 'easeOut' }}
+        className="absolute inset-0 overflow-hidden pointer-events-none z-0"
+      >
         {fallingJunk.map((item) => {
           const Icon = item.Icon;
+          const yTravel = item.landY - START_Y;
           return (
             <motion.div
               key={item.id}
               className="absolute text-slate-700/80"
-              style={{
-                left: `${item.startX}vw`,
-                top: `${item.startY}vh`,
-              }}
-              animate={{
-                y: [`0vh`, `${item.endY - item.startY}vh`, `${item.endY - item.startY}vh`, `${item.leaveY}vh`],
-                x: [`0vw`, `${item.endX - item.startX}vw`, `${item.endX - item.startX}vw`, `${item.endX - item.startX}vw`],
-                rotate: [0, item.rotation, item.rotation, item.rotation + 180],
-                opacity: [0, 1, 1, 0],
-              }}
+              style={{ left: `${item.landX}vw`, top: `${START_Y}vh` }}
+              initial={{ y: 0, opacity: 0, rotate: 0 }}
+              animate={{ y: `${yTravel}vh`, opacity: 1, rotate: item.rotation }}
               transition={{
-                duration: item.duration,
-                times: item.times,
-                repeat: Infinity,
-                delay: item.delay,
-                ease: "linear",
+                y: { duration: 1.3, delay: item.delay, ease: [0.3, 0, 0.8, 1] },
+                opacity: { duration: 0.15, delay: item.delay },
+                rotate: { duration: 1.3, delay: item.delay, ease: 'easeOut' },
               }}
             >
               <Icon size={item.size} strokeWidth={1.5} />
             </motion.div>
           );
         })}
-      </div>
+      </motion.div>
 
       {/* Trailer Front */}
       <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/4 w-full max-w-[800px] aspect-[2/1] pointer-events-none z-0 opacity-90">
