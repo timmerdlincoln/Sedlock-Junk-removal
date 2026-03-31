@@ -107,28 +107,19 @@ function Hero() {
       <div className="absolute inset-0 bg-[linear-gradient(to_right,#80808012_1px,transparent_1px),linear-gradient(to_bottom,#80808012_1px,transparent_1px)] bg-[size:24px_24px] mask-radial-faded" />
       <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[600px] h-[600px] bg-blue-400/10 rounded-full blur-[120px] mix-blend-multiply animate-blob" />
 
-      {/* Trailer Back */}
-      <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/4 w-full max-w-[800px] aspect-[2/1] pointer-events-none z-0 opacity-80">
-        <svg viewBox="0 0 800 400" fill="none" xmlns="http://www.w3.org/2000/svg" className="w-full h-full">
-          <path d="M150 100 L650 100 L600 300 L200 300 Z" fill="#020408" />
-          <path d="M100 120 L150 100 L200 300 L180 320 Z" fill="#05080f" />
-          <path d="M700 120 L650 100 L600 300 L620 320 Z" fill="#05080f" />
-        </svg>
-      </div>
-
-      {/* Falling Junk — continuous */}
-      <div className="absolute inset-0 overflow-hidden pointer-events-none z-0">
+      {/* Falling Junk — background, behind trailer */}
+      <div className="absolute inset-0 overflow-hidden pointer-events-none" style={{ zIndex: 1 }}>
         {fallingJunk.map((item) => {
           const Icon = item.Icon;
           const yTravel = item.landY - START_Y;
           return (
             <motion.div
               key={item.id}
-              className="absolute text-slate-700/80"
+              className="absolute text-slate-400/50"
               style={{ left: `${item.x}vw`, top: `${START_Y}vh` }}
               animate={{
                 y: [`0vh`, `${yTravel}vh`],
-                opacity: [0, 1, 1, 0],
+                opacity: [0, 0.6, 0.6, 0],
                 rotate: [0, item.rotation],
               }}
               transition={{
@@ -144,6 +135,15 @@ function Hero() {
             </motion.div>
           );
         })}
+      </div>
+
+      {/* Trailer Back */}
+      <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/4 w-full max-w-[800px] aspect-[2/1] pointer-events-none opacity-80" style={{ zIndex: 2 }}>
+        <svg viewBox="0 0 800 400" fill="none" xmlns="http://www.w3.org/2000/svg" className="w-full h-full">
+          <path d="M150 100 L650 100 L600 300 L200 300 Z" fill="#020408" />
+          <path d="M100 120 L150 100 L200 300 L180 320 Z" fill="#05080f" />
+          <path d="M700 120 L650 100 L600 300 L620 320 Z" fill="#05080f" />
+        </svg>
       </div>
 
       {/* Trailer Front */}
