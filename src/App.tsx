@@ -1,6 +1,6 @@
 import { motion, useScroll, useTransform } from 'motion/react';
 import { ArrowRight, CheckCircle2, Clock, Truck, Shield, Star, Quote, ChevronRight, Sparkles, Trash2, Recycle, Leaf, Package, Monitor, Sofa, Coffee, Archive, FileText, Headphones, Box, Smartphone, Tv, Speaker } from 'lucide-react';
-import React, { useRef, useState, useMemo, useEffect } from 'react';
+import React, { useRef, useState, useMemo } from 'react';
 
 function Navbar() {
   return (
@@ -84,31 +84,22 @@ function Hero() {
   const y = useTransform(scrollYProgress, [0, 1], ["0%", "50%"]);
   const opacity = useTransform(scrollYProgress, [0, 1], [1, 0]);
 
-  const [cycleKey, setCycleKey] = useState(0);
-  const [clearing, setClearing] = useState(false);
-
-  useEffect(() => {
-    setClearing(false);
-    const clearTimer = setTimeout(() => setClearing(true), 5000);
-    const resetTimer = setTimeout(() => setCycleKey((k: number) => k + 1), 5800);
-    return () => {
-      clearTimeout(clearTimer);
-      clearTimeout(resetTimer);
-    };
-  }, [cycleKey]);
+  const ITEM_COUNT = 22;
+  const FALL_DURATION = 1.4;
+  const STAGGER = 0.32;
+  const REPEAT_DELAY = ITEM_COUNT * STAGGER - FALL_DURATION;
+  const START_Y = -15;
 
   const junkIcons = [Package, Monitor, Sofa, Coffee, Archive, FileText, Headphones, Box, Smartphone, Tv, Speaker, Trash2, Leaf];
-  const START_Y = -15;
-  const fallingJunk = useMemo(() => Array.from({ length: 35 }).map((_, i) => ({
+  const fallingJunk = useMemo(() => Array.from({ length: ITEM_COUNT }).map((_, i) => ({
     id: i,
     Icon: junkIcons[i % junkIcons.length],
     size: Math.random() * 18 + 14,
-    landX: Math.random() * 24 + 38,
+    x: Math.random() * 24 + 38,
     landY: Math.random() * 10 + 57,
-    delay: (i / 35) * 3.5,
+    delay: i * STAGGER,
     rotation: Math.random() * 340 - 170,
-  // eslint-disable-next-line react-hooks/exhaustive-deps
-  })), [cycleKey]);
+  })), []);
 
   return (
     <section ref={containerRef} className="relative z-10 min-h-screen flex items-center justify-center overflow-hidden pt-20 bg-white text-black">
@@ -125,13 +116,8 @@ function Hero() {
         </svg>
       </div>
 
-      {/* Falling Junk — pile up then clear */}
-      <motion.div
-        key={cycleKey}
-        animate={{ opacity: clearing ? 0 : 1 }}
-        transition={{ duration: 0.7, ease: 'easeOut' }}
-        className="absolute inset-0 overflow-hidden pointer-events-none z-0"
-      >
+      {/* Falling Junk — continuous */}
+      <div className="absolute inset-0 overflow-hidden pointer-events-none z-0">
         {fallingJunk.map((item) => {
           const Icon = item.Icon;
           const yTravel = item.landY - START_Y;
@@ -139,20 +125,26 @@ function Hero() {
             <motion.div
               key={item.id}
               className="absolute text-slate-700/80"
-              style={{ left: `${item.landX}vw`, top: `${START_Y}vh` }}
-              initial={{ y: 0, opacity: 0, rotate: 0 }}
-              animate={{ y: `${yTravel}vh`, opacity: 1, rotate: item.rotation }}
+              style={{ left: `${item.x}vw`, top: `${START_Y}vh` }}
+              animate={{
+                y: [`0vh`, `${yTravel}vh`],
+                opacity: [0, 1, 1, 0],
+                rotate: [0, item.rotation],
+              }}
               transition={{
-                y: { duration: 1.3, delay: item.delay, ease: [0.3, 0, 0.8, 1] },
-                opacity: { duration: 0.15, delay: item.delay },
-                rotate: { duration: 1.3, delay: item.delay, ease: 'easeOut' },
+                duration: FALL_DURATION,
+                delay: item.delay,
+                repeat: Infinity,
+                repeatDelay: REPEAT_DELAY,
+                ease: 'easeIn',
+                opacity: { times: [0, 0.1, 0.85, 1] },
               }}
             >
               <Icon size={item.size} strokeWidth={1.5} />
             </motion.div>
           );
         })}
-      </motion.div>
+      </div>
 
       {/* Trailer Front */}
       <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/4 w-full max-w-[800px] aspect-[2/1] pointer-events-none z-0 opacity-90">
