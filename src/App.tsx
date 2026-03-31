@@ -1,5 +1,5 @@
 import { motion, useScroll, useTransform } from 'motion/react';
-import { ArrowRight, CheckCircle2, Clock, Truck, Shield, Star, Quote, ChevronRight, Sparkles, Trash2, Recycle, Leaf } from 'lucide-react';
+import { ArrowRight, CheckCircle2, Clock, Truck, Shield, Star, Quote, ChevronRight, Sparkles, Trash2, Recycle, Leaf, Package, Monitor, Sofa, Coffee, Archive, FileText, Headphones, Box, Smartphone, Tv, Speaker } from 'lucide-react';
 import React, { useRef, useState, useMemo } from 'react';
 
 function Navbar() {
@@ -75,7 +75,6 @@ function AnimatedLinesBackground() {
   );
 }
 
-
 function Hero() {
   const containerRef = useRef<HTMLDivElement>(null);
   const { scrollYProgress } = useScroll({
@@ -85,15 +84,41 @@ function Hero() {
   const y = useTransform(scrollYProgress, [0, 1], ["0%", "50%"]);
   const opacity = useTransform(scrollYProgress, [0, 1], [1, 0]);
 
+  const junkIcons = [Package, Monitor, Sofa, Coffee, Archive, FileText, Headphones, Box, Smartphone, Tv, Speaker, Trash2, Leaf];
+  const fallingJunk = useMemo(() => Array.from({ length: 100 }).map((_, i) => {
+    const fallDuration = Math.random() * 1.5 + 1; // 1s to 2.5s — quick fall
+    const waitDuration = 30; // sit in trailer for 30 seconds
+    const fadeDuration = 1.5; // fade out over 1.5s
+    const totalDuration = fallDuration + waitDuration + fadeDuration;
+
+    const t1 = fallDuration / totalDuration; // landed
+    const t2 = (fallDuration + waitDuration) / totalDuration; // start fading
+    // t3 = 1 (fully gone)
+
+    return {
+      id: `junk-${i}`,
+      Icon: junkIcons[i % junkIcons.length],
+      size: Math.random() * 20 + 14,
+      startX: Math.random() * 22 + 39, // 39vw to 61vw (inside trailer walls)
+      endX: Math.random() * 22 + 39,
+      startY: -15,
+      endY: Math.random() * 10 + 58, // 58vh to 68vh (trailer bed area)
+      duration: totalDuration,
+      times: [0, t1, t2, 1],
+      delay: Math.random() * -totalDuration, // stagger starts across full cycle
+      rotation: Math.random() * 360,
+      wobble: (Math.random() - 0.5) * 6, // slight horizontal wobble during fall
+    };
+  }), []);
+
   return (
     <section ref={containerRef} className="relative z-10 min-h-screen flex items-center justify-center overflow-hidden pt-20 bg-white text-black">
       {/* Background Effects */}
       <div className="absolute inset-0 bg-[linear-gradient(to_right,#80808012_1px,transparent_1px),linear-gradient(to_bottom,#80808012_1px,transparent_1px)] bg-[size:24px_24px] mask-radial-faded" />
       <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[600px] h-[600px] bg-blue-400/10 rounded-full blur-[120px] mix-blend-multiply animate-blob" />
 
-
       {/* Trailer Back */}
-      <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/4 w-full max-w-[800px] aspect-[2/1] pointer-events-none opacity-80" style={{ zIndex: 2 }}>
+      <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/4 w-full max-w-[800px] aspect-[2/1] pointer-events-none z-0 opacity-80">
         <svg viewBox="0 0 800 400" fill="none" xmlns="http://www.w3.org/2000/svg" className="w-full h-full">
           <path d="M150 100 L650 100 L600 300 L200 300 Z" fill="#020408" />
           <path d="M100 120 L150 100 L200 300 L180 320 Z" fill="#05080f" />
@@ -101,8 +126,51 @@ function Hero() {
         </svg>
       </div>
 
+      {/* Falling Junk */}
+      <div className="absolute inset-0 overflow-hidden pointer-events-none z-0">
+        {fallingJunk.map((item) => {
+          const Icon = item.Icon;
+          return (
+            <motion.div
+              key={item.id}
+              className="absolute text-slate-700/80"
+              style={{
+                left: `${item.startX}vw`,
+                top: `${item.startY}vh`,
+              }}
+              animate={{
+                y: [
+                  `0vh`,
+                  `${item.endY - item.startY}vh`, // land in trailer
+                  `${item.endY - item.startY}vh`, // stay put for 30s
+                  `${item.endY - item.startY}vh`, // fade out in place
+                ],
+                x: [
+                  `0vw`,
+                  `${item.wobble}vw`, // slight drift during fall
+                  `${item.wobble}vw`, // stay
+                  `${item.wobble}vw`, // stay
+                ],
+                rotate: [0, item.rotation, item.rotation, item.rotation],
+                opacity: [0, 0.8, 0.8, 0], // fade in on fall, visible 30s, fade out
+                scale: [1, 1, 1, 0.6], // shrink slightly as they disappear
+              }}
+              transition={{
+                duration: item.duration,
+                times: item.times,
+                repeat: Infinity,
+                delay: item.delay,
+                ease: "linear",
+              }}
+            >
+              <Icon size={item.size} strokeWidth={1.5} />
+            </motion.div>
+          );
+        })}
+      </div>
+
       {/* Trailer Front */}
-      <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/4 w-full max-w-[800px] aspect-[2/1] pointer-events-none opacity-90" style={{ zIndex: 3 }}>
+      <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/4 w-full max-w-[800px] aspect-[2/1] pointer-events-none z-0 opacity-90">
         <svg viewBox="0 0 800 400" fill="none" xmlns="http://www.w3.org/2000/svg" className="w-full h-full">
           <path d="M100 120 L700 120 L620 320 L180 320 Z" fill="#0a0f1c" stroke="rgba(255,255,255,0.1)" strokeWidth="2" />
           <path d="M100 120 L700 120" stroke="#3b82f6" strokeWidth="4" opacity="0.3" />
