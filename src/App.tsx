@@ -876,11 +876,8 @@ function Footer() {
       { label: 'About Us', href: '#about' },
     ],
     areas: [
-      'Indianola',
-      'Des Moines',
-      'Norwalk',
-      'Carlisle',
-      'Pleasant Hill',
+      'Indianola, IA',
+      'Ames, IA',
     ]
   };
 
