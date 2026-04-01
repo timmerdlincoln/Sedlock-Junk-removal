@@ -612,7 +612,9 @@ function Contact() {
     `w-full bg-[#010E21]/60 border ${errors[field] ? 'border-red-400/60' : 'border-white/10'} rounded-lg px-3.5 py-2.5 text-sm focus:outline-none focus:border-blue-400/50 focus:ring-1 focus:ring-blue-400/20 transition-all placeholder:text-white/25`;
 
   return (
-    <section id="contact" className="py-32 relative overflow-hidden bg-[#021631]">
+    <section id="contact" className="py-32 relative bg-[#021631]">
+      {/* Grid pattern */}
+      <div className="absolute inset-0 bg-[linear-gradient(to_right,#80808012_1px,transparent_1px),linear-gradient(to_bottom,#80808012_1px,transparent_1px)] bg-[size:48px_48px] opacity-20 pointer-events-none" />
       {/* Decorative glow */}
       <div className="absolute top-0 left-1/2 -translate-x-1/2 w-[800px] h-[400px] bg-gradient-to-b from-blue-500/10 to-transparent blur-[120px] rounded-full pointer-events-none" />
 
