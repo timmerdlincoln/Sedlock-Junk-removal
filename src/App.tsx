@@ -87,7 +87,7 @@ function Hero() {
   const junkIcons = [Package, Monitor, Sofa, Coffee, Archive, FileText, Headphones, Box, Smartphone, Tv, Speaker, Trash2, Leaf];
   const fallingJunk = useMemo(() => Array.from({ length: 100 }).map((_, i) => {
     const fallDuration = Math.random() * 1.5 + 1; // 1s to 2.5s — quick fall
-    const waitDuration = 30; // sit in trailer for 30 seconds
+    const waitDuration = 4; // sit in trailer for 4 seconds
     const fadeDuration = 1.5; // fade out over 1.5s
     const totalDuration = fallDuration + waitDuration + fadeDuration;
 
@@ -102,7 +102,7 @@ function Hero() {
       startX: Math.random() * 22 + 39, // 39vw to 61vw (inside trailer walls)
       endX: Math.random() * 22 + 39,
       startY: -15,
-      endY: Math.random() * 10 + 58, // 58vh to 68vh (trailer bed area)
+      endY: Math.random() * 8 + 51, // 51vh to 59vh (trailer bed area, works on mobile)
       duration: totalDuration,
       times: [0, t1, t2, 1],
       delay: Math.random() * -totalDuration, // stagger starts across full cycle
