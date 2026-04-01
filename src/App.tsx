@@ -876,8 +876,8 @@ function Footer() {
       { label: 'About Us', href: '#about' },
     ],
     areas: [
-      'Indianola, IA',
-      'Ames, IA',
+      'Indianola',
+      'Ames',
     ]
   };
 
