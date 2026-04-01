@@ -254,7 +254,7 @@ function HowItWorks() {
   ];
 
   return (
-    <section id="how-it-works" className="py-32 relative overflow-hidden">
+    <section id="how-it-works" className="py-32 relative">
       <div className="max-w-7xl mx-auto px-6 relative z-10">
         <div className="text-center mb-20">
           <h2 className="text-3xl md:text-5xl font-bold tracking-tight mb-4">How It Works</h2>
@@ -309,7 +309,7 @@ function Services() {
   ];
 
   return (
-    <section id="services" className="py-32 relative overflow-hidden">
+    <section id="services" className="py-32 relative">
       <div className="max-w-7xl mx-auto px-6 relative z-10">
         <div className="flex flex-col md:flex-row md:items-end justify-between mb-16 gap-6">
           <div>
@@ -348,7 +348,7 @@ function Services() {
 
 function Pricing() {
   return (
-    <section id="pricing" className="py-24 relative overflow-hidden">
+    <section id="pricing" className="py-24 relative">
       <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[600px] h-[300px] bg-gradient-to-r from-white/20 via-blue-400/20 to-transparent blur-[100px] rounded-full opacity-50 pointer-events-none z-0" />
 
       <div className="max-w-3xl mx-auto px-6 relative z-10 text-center">
@@ -398,7 +398,7 @@ function AboutUs() {
   ];
 
   return (
-    <section id="about" className="py-32 relative overflow-hidden">
+    <section id="about" className="py-32 relative">
       <div className="max-w-7xl mx-auto px-6 relative z-10">
         <div className="flex flex-col md:flex-row md:items-end justify-between mb-16 gap-6">
           <div>
@@ -482,7 +482,7 @@ function Testimonials() {
   ];
 
   return (
-    <section id="reviews" className="py-32 relative overflow-hidden">
+    <section id="reviews" className="py-32 relative">
       <div className="max-w-7xl mx-auto px-6 relative z-10">
         <div className="text-center mb-20">
           <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full border border-white/10 bg-white/5 text-sm mb-6">
@@ -831,7 +831,7 @@ function WorkDone() {
   ];
 
   return (
-    <section id="work" className="py-32 relative overflow-hidden">
+    <section id="work" className="py-32 relative">
       <div className="max-w-7xl mx-auto px-6 relative z-10">
         <div className="text-center mb-16">
           <h2 className="text-3xl md:text-5xl font-bold tracking-tight mb-4">Our Work</h2>
